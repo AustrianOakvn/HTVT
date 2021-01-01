@@ -3,6 +3,8 @@
 \usepackage[a4paper,hmargin={3cm,2.5cm},vmargin={2.5cm,2.5cm}]{geometry}
 \usepackage{tikz}
 \usepackage{amsmath}
+\usepackage{mathrsfs}
+\usepackage{float}
 \usetikzlibrary{calc}
 
 \begin{document}
@@ -29,7 +31,7 @@
 \end{figure}
 \textup{\large  PROJECT REPORT\\[1cm]}
 \begin{LARGE}
-{\textbf {"TELECOMMUNICATION SYSTEMS" }}\end{LARGE}\\[3cm]
+{\textbf {TELECOMMUNICATION SYSTEMS}}\end{LARGE}\\[3cm]
 \textit{SUBMITTED BY GROUP NUMBER}\\[0.5cm]
 \begin{large}
 \begin{tabular}{ c c c }
@@ -75,12 +77,7 @@
 
 % \end{tikzpicture}
 % \end{center}
-\begin{center}
-    \includegraphics[width=0.6\linewidth]{./channel_model.PNG}\\[1cm]
-\end{center}
-\begin{equation}
-    p(y|x) = Q.(\sqrt{\frac{2E_b}{N_0}})
-\end{equation}
+
 
 
 \par Write something here.\\
@@ -88,18 +85,58 @@
 \par Write something here.\\
 
 \chapter{CHANNEL MODEL}
+\par Channel is what the data passes through, which can also be called medium. These are examples of communication channels: coaxial cable, ionospheric propagation, free space, fiber optic cables, magnetic and optical disks. Information inside communication channels can suffer from loss or corruption from a lot of different elements. For example: attenuation, nonlinearities, bandwidth limitations, multipath propagation and noise.... Those complex factors require an stochastic relation to describe the channel. Most of the time, channels that we use are utilizing (continuous-time) waveforms as their input and output. Due to the limitation of bandwidth, sampling theorem was used to convert continuous-time signal to discrete-time signal. Then our channel is equivalent to a discrete-time channel.
+\par If a discrete-time channel has its inputs and outputs are countable value, it is called discrete channel. Below is an illustration of a discrete channel.
+\begin{figure}[h]  %h means here other options t , b, p, etc.
+    \centering
+    \includegraphics[width=0.5\linewidth]{./channel_model.PNG}
+    \caption{A discrete channel}
+    \label{fig:discrete channel}
+\end{figure}
+\par In the report, we focus on discrete-memoryless channel, whose output $y_i$ is not depend on input at any other time except for $x_i$. For such a channel, for any $y\in\mathscr{Y}^{n}$ and $x\in\mathscr{X}^{n}$, we have  
 \begin{equation}
     p(y|x) = \prod_{i=1}^{n} p(y_i|x_i)
 \end{equation}
+\par Considering the special case of DMC is binary-symmetric channel (BSC). Below is an illustration of a BSC
+\begin{figure}[H]  %h means here other options t , b, p, etc.
+    \centering
+    \includegraphics[width=0.3\linewidth]{./BSC.PNG}
+    \caption{Binary-symmetric channel}
+    \label{fig:bsc}
+\end{figure}
+\par Applying the conditional probability for this channel, we have $P(0|1)=P(1|0)$, this is called \textit{crossover probability} $\epsilon$
 \begin{equation}
     p(y|x) = Q.(\sqrt{\frac{2E_b}{N_0}})
 \end{equation}
+\par The discrete-time additive white Gaussian noise channel with input power constraint is the most important continuous alphabet channel. In this channel, the relationship between input and output is given by
+\begin{equation}
+    Y=X+Z
+\end{equation}
+\begin{figure}[H]  %h means here other options t , b, p, etc.
+    \centering
+    \includegraphics[width=0.4\linewidth]{./AWG.PNG}
+    \caption{Additive white Gaussian noise channel with power constraint}
+    \label{fig:awg}
+\end{figure}
+\par Z is Gaussian noise with mean equal to 0 and variance equal to $P_N$. It is assumed that inputs is limited by a power constant. For large n, input blocks of length $n$ satisfy
 \begin{equation}
     \frac{1}{n}\sum_{i=1}^{n}x_i^2 <= P
 \end{equation}
 
 
 \chapter{CHANNEL CAPACITY}
+% \section{Remind of previous chapter}
+\par The key concept of information is that it is conveyed by randomness, which can be defined in term of mathematical equations. Suppose we have a discrete random variable $X$ and $x$ is some particular outcome what occurs with probability $p(x)$. Then we assign to that event $x$ the information that it conveys the uncertainty measure:
+\begin{equation}
+    uncertainty = -\log p(x)
+\end{equation}
+\par The base of the logarithm determines the units of information. If $\log_{2}$ is used then the units are bits. If $\log_{e}$ is used, the units are in nats.
+The entropy $H(X)$ of a discrete random variable defines a fundamental limit on the rate at which a discrete source can be encoded without errors in its reconstruction.
+\begin{equation}
+    H(X)=-\sum_{x\in X}p(x)\log p(x)
+\end{equation}
+\par When we are dealing with noise in the channel, Shannon (1948) gave us a valuable theorem for noisy channel coding, which states that "The basic limitation that noise cause in a communication channel is not on the reliability of communication, but on the speed of communication". However, the problem with DMC in general is the existence of joint output. Take a noisy typewriter channel as an example, we know that it is only when we select a subset of inputs whose outputs are separated, then the reliability of that channel is guaranteed. But considering binary symmetric channel, there is no selection which could satisfy the nonoverlapping outputs condition. This lead to the use of extension channel 
+\par The fundamental idea of extension channel is that we duplicate binary symmetric channel n times. Each extension takes a binary block of length n as input and output. For n large enough, we can compute the number of combination that an input of size n could have as
 \begin{equation}
     \binom{n}{n\epsilon}
 \end{equation}
@@ -113,21 +150,24 @@
 \end{equation}
 \par From above
 \begin{equation}
-    \frac{1}{n}\log_{2}\binom{n}{n\epsilon} \approx & -\frac{1}{2n}\log_{2}(2\pi n\epsilon\overline{\epsilon})-\epsilon\log_{2}\epsilon - \overline{\epsilon}\log_{2}\overline{\epsilon}
-    \rightarrow & -\epsilon\log_{2}\epsilon - \overline{\epsilon}\log_{2}\overline{\epsilon} \text{as} n \rightarrow \infty
+    \begin{split}
+    \frac{1}{n}\log_{2}\binom{n}{n\epsilon} \approx & -\frac{1}{2n}\log_{2}(2\pi n\epsilon\overline{\epsilon})-\epsilon\log_{2}\epsilon - \overline{\epsilon}\log_{2}\overline{\epsilon}\\
+    \rightarrow & -\epsilon\log_{2}\epsilon - \overline{\epsilon}\log_{2}\overline{\epsilon} \text{as} n \rightarrow \infty\\
     = & H_b(\epsilon)
+    \end{split}
 \end{equation}
 \par When $n\rightarrow\infty$, $\binom{n}{n\epsilon}\approx2^{nH_b(\epsilon)}$
-\par Using Sterling 's approximation
-\begin{equation}
-    \binom{n}{n\epsilon} \approx 2^{n.H_b(\epsilon)}
-\end{equation}
 \par Where $H_b(\epsilon) = -\epsilon.\log_{2}\epsilon-(1-\epsilon).\log_{2}(1-\epsilon)$
-
+\par While the total number of output sequence is roughly $2^{nH(Y)}$. We can calculate the maximum number of input sequences that produces almost nonoverlapping output sequences
 \begin{equation}
     M = \frac{2^{n.H(Y)}}{2^{n.H_b(\epsilon)}} = 2^{n.(H(Y)-H_b(\epsilon))}
 \end{equation}
-
+\begin{figure}[H]  %h means here other options t , b, p, etc.
+    \centering
+    \includegraphics[width=0.5\linewidth]{./BSCE.PNG}
+    \caption{Binary symmetric channel with extension channel}
+    \label{fig:bsce}
+\end{figure}
 \begin{equation}
     R = \frac{\log M}{n} = H(Y) - H_b(\epsilon)
 \end{equation}
